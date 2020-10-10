@@ -16,5 +16,29 @@ pub enum Opcode {
     OP_JMP = 12,   // jump
     OP_RES = 13,   // reserved (unused)
     OP_LEA = 14,   // load effective address
-    OP_TRA = 15    // execute trap
+    OP_TRAP = 15    // execute trap
+}
+
+
+impl Opcode {
+    pub fn from_i16(value: i16) -> Self {
+        match value {
+            0   => Self::OP_BR,
+            1   => Self::OP_ADD,
+            2   => Self::OP_LD,
+            3   => Self::OP_ST,
+            4   => Self::OP_JSR,
+            5   => Self::OP_AND,
+            6   => Self::OP_LDR,
+            7   => Self::OP_STR,
+            8   => Self::OP_RTI,
+            9   => Self::OP_NOT,
+            10  => Self::OP_LDI,
+            11  => Self::OP_STI,
+            12  => Self::OP_JMP,
+            13  => Self::OP_RES,
+            14  => Self::OP_LEA,
+            15  => Self::OP_TRAP,
+        }
+    }
 }
