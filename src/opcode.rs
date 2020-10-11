@@ -1,4 +1,3 @@
-
 #[allow(non_camel_case_types)]
 pub enum Opcode {
     OP_BR  = 0,    // branch
@@ -19,9 +18,8 @@ pub enum Opcode {
     OP_TRAP = 15    // execute trap
 }
 
-
 impl Opcode {
-    pub fn from_i16(value: i16) -> Self {
+    pub fn from_u16(value: u16) -> Self {
         match value {
             0   => Self::OP_BR,
             1   => Self::OP_ADD,

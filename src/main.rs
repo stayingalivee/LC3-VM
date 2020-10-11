@@ -20,7 +20,7 @@ fn main() {
     
     //define registers and set PC to the default starting position
     let reg_count = 10;
-    let PC_START: i16 = 0x3000;
+    let PC_START: u16 = 0x3000;
     let mut register  = Register {
         reg: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     };
@@ -38,19 +38,18 @@ fn main() {
     while running {
 
         // get the instruction
-        let instruction: i16 = memory[register[Reg::R_PC]];
-        
+        let instruction: u16 = memory[register[Reg::R_PC]];
+        let instr_wo_op: u16 = instruction << 4;
         /* Instruction example for an ADD OP
          * 0001 000 000  1     00011
          * ADD  R0  R0   Mode  3
         */
         // get the operation bits
-        let operation: i16 = instruction >> 12;
+        let operation: u16 = instruction >> 12;
 
 
-        match Opcode::from_i16(operation) {
+        match Opcode::from_u16(operation) {
             Opcode::OP_ST  =>  {
-                
                 op_st()
             },
             Opcode::OP_BR  =>  {
@@ -60,7 +59,7 @@ fn main() {
                 op_ld()
             },
             Opcode::OP_ADD =>  {
-                op_add()
+                op_add(&mut register, instr_wo_op);
             },
             Opcode::OP_AND =>  {
                 op_and()
