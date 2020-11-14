@@ -36,7 +36,7 @@ impl Opcode {
             12  => Self::OP_JMP,
             13  => Self::OP_RES,
             14  => Self::OP_LEA,
-            15  => Self::OP_TRAP,
+            _   => Self::OP_TRAP
         }
     }
 }

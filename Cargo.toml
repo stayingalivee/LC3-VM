@@ -1,5 +1,5 @@
 [package]
-name = "virtual-machine"
+name = "virtual_machine"
 version = "0.1.0"
 authors = ["ahmad <n.ahmadalkhatib@gmail.com>"]
 edition = "2018"
