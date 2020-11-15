@@ -16,7 +16,7 @@ pub enum Reg{
 }
 
 pub struct Register {
-    pub reg: [u16; 10],
+    pub reg: [i16; 10],
 }
 
 impl IndexMut<Reg> for Register {
@@ -26,7 +26,7 @@ impl IndexMut<Reg> for Register {
 }
 
 impl Index<Reg> for Register {
-    type Output = u16;
+    type Output = i16;
     fn index(&self, index: Reg) -> &Self::Output {
         &self.reg[index as usize]
     }
@@ -39,7 +39,7 @@ impl IndexMut<u16> for Register {
 }
 
 impl Index<u16> for Register {
-    type Output = u16;
+    type Output = i16;
     fn index(&self, index: u16) -> &Self::Output {
         &self.reg[index as usize]
     }
