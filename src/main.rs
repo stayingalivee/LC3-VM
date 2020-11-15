@@ -21,7 +21,7 @@ fn main() {
     
     //define registers and set PC to the default starting position
     let reg_count = 10;
-    let PC_START: i16 = 0x3000;
+    let PC_START: u16 = 0x3000;
     let mut register  = Register {reg: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]};
     register[Reg::R_PC] = PC_START;
     
