@@ -68,6 +68,7 @@ pub fn op_ldi(reg: &mut Register, instr: u16, memory: &Memory){
     reg[Reg::R_PC] += 1;                             // increment pc
     let offset = sign_ext(instr & 0b111111111, 9);   // sign extend pc offset
     reg[dr] = memory[memory[pc + offset]];           // load indirect.
+    update_flags(reg, dr);
 }
 
 pub fn op_ldr(){
@@ -197,13 +198,30 @@ mod tests{
         let pc_start: u16 = 0x3000;                     // set program start
         let mut reg: Register = Default::default();     // init regs
         reg[Reg::R_PC] = pc_start;                      // init regs
-        let instr: u16 = 0b1010_001_000000001;          
-        let mut memory = Memory::new(65535);
-        memory[0x3001] = 0x3002;                       
-        memory[0x3002] = 10;
-
+        let instr: u16 = 0b1010_001_000000001;          // define instruction
+        let mut memory = Memory::new(65535);            // declare memory
+        memory[0x3001] = 0x3002;                        // indirect pointer
+        memory[0x3002] = 10;                            // actual data to be loaded
         op_ldi(&mut reg, instr, &mut memory);
-        assert_eq!(reg[1], 10);
+        assert_eq!(reg[1], 10, "testing register value");
+        assert_eq!(reg[Reg::R_COND], 0b001, "testing positive flags");
+    }
+
+    #[test]
+    fn test_ldi_flags(){
+        let pc_start: u16 = 0x3000;                     // set program start
+        let mut reg: Register = Default::default();     // init regs
+        reg[Reg::R_PC] = pc_start;                      // init regs
+        let instr: u16 = 0b1010_001_000000001;          // define instruction
+        let mut memory = Memory::new(65535);            // declare memory
+        memory[0x3001] = 0x3002;                        // indirect pointer
+        memory[0x3002] = 0b1111111111111101;            // actual data to be loaded
+        op_ldi(&mut reg, instr, &mut memory);
+        assert_eq!(reg[Reg::R_COND], 0b100, "testing negative flags");
+
+        memory[0x3002] = 0;
+        op_ldi(&mut reg, instr, &mut memory);
+        assert_eq!(reg[Reg::R_COND], 0b010, "testing zero flags");
     }
     
 }
