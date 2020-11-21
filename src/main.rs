@@ -72,7 +72,7 @@ fn main() {
                 op_ldr(&mut register, instruction, &memory)
             },
             Opcode::OP_LEA =>  {
-                op_lea()
+                op_lea(&mut register, instruction);
             },
             Opcode::OP_NOT =>  {
                 op_not()
