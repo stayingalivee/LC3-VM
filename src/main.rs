@@ -3,11 +3,12 @@ mod register;
 mod opcode;
 mod cond_flags;
 mod operations;
+mod memory;
 use register::Register;
 use register::Reg;
 use opcode::Opcode;
 use operations::*;
-
+use memory::Memory;
 
 /**
  * Virutal machine implementing LC3 (Little Computer - 3)
@@ -16,13 +17,13 @@ fn main() {
     println!("Starting VM........");
 
     // define the RAM
-    let max: usize = 65535;
-    let mut memory = vec![0; max];
-    
+    let MAX: u16 = 65535;
+    let mut memory = Memory::new(MAX);
+
     //define registers and set PC to the default starting position
     let reg_count = 10;
     let PC_START: u16 = 0x3000;
-    let mut register  = Register {reg: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]};
+    let mut register: Register = Default::default(); 
     register[Reg::R_PC] = PC_START;
     
     /*
@@ -36,7 +37,7 @@ fn main() {
     while running {
 
         // get the instruction
-        let instruction: u16 = memory[register[Reg::R_PC] as usize];
+        let instruction: u16 = memory[register[Reg::R_PC]];
     
         // get the operation bits
         let operation: u16 = instruction >> 12;
@@ -65,7 +66,7 @@ fn main() {
                 op_jsr()
             },
             Opcode::OP_LDI =>  {
-                op_ldi()
+                //op_ldi()
             },
             Opcode::OP_LDR =>  {
                 op_ldr()
