@@ -17,7 +17,7 @@ fn main() {
     println!("Starting VM........");
 
     // define the RAM
-    let MAX: u16 = 65535;
+    let MAX: usize = 65535;
     let mut memory = Memory::new(MAX);
 
     //define registers and set PC to the default starting position
@@ -66,7 +66,7 @@ fn main() {
                 op_jsr()
             },
             Opcode::OP_LDI =>  {
-                //op_ldi()
+                op_ldi(&mut register, instruction, &memory);
             },
             Opcode::OP_LDR =>  {
                 op_ldr()

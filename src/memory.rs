@@ -8,15 +8,15 @@ use std::ops::{Index, IndexMut};
  * 
  */
 pub struct Memory {
-    pub size: u16,
+    pub size: usize,
     pub memory: Vec<u16>,
 }
 
 impl Memory {
-    pub fn new(size: u16) -> Self {
+    pub fn new(size: usize) -> Self {
         Self {
             size,
-            memory: vec![0, size]
+            memory: vec![0; size]
         }
     }
 }
