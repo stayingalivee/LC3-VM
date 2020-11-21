@@ -19,6 +19,15 @@ pub struct Register {
     pub reg: [u16; 10],
 }
 
+
+impl Default for Register {
+    fn default() -> Register {
+        Register {
+            reg: [0; 10]
+        }
+    }
+}
+
 /// override indexing with enum Reg
 impl IndexMut<Reg> for Register {
     fn index_mut(&mut self, index: Reg) -> &mut Self::Output {
@@ -35,7 +44,7 @@ impl Index<Reg> for Register {
 /// override indexing with u16
 impl IndexMut<u16> for Register {
     fn index_mut(&mut self, index: u16) -> &mut Self::Output {
-        &mut self.reg[index as usize]
+       &mut self.reg[index as usize]
     }
 }
 impl Index<u16> for Register {
