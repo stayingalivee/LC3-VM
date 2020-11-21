@@ -69,7 +69,7 @@ fn main() {
                 op_ldi(&mut register, instruction, &memory);
             },
             Opcode::OP_LDR =>  {
-                op_ldr()
+                op_ldr(&mut register, instruction, &memory)
             },
             Opcode::OP_LEA =>  {
                 op_lea()
