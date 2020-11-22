@@ -20,11 +20,12 @@ fn main() {
     let max: usize = 65535;
     let mut memory = Memory::new(max);
 
-    //define registers and set PC to the default starting position
+    // declare registers and set PC to the default starting position
     let _reg_count = 10;
     let pc_start: u16 = 0x3000;
-    let mut register: Register = Default::default();
-    register[Reg::R_PC] = pc_start;
+    let mut reg: Register = Default::default();
+    reg[Reg::R_PC] = pc_start;
+
     /*
      * From now on the process is fairly simple
      * 1- load the instruction from the RAM (PC)
@@ -34,27 +35,25 @@ fn main() {
      */
     let running: bool = true;
     while running {
-        // get the instruction
-        let instr: u16 = memory[register[Reg::R_PC]];
-        // get the operation bits
-        let operation: u16 = instr >> 12;
+        let instr: u16 = memory[reg[Reg::R_PC]];         // get the instruction
+        let operation: u16 = instr >> 12;                     // get the operation bits
 
         match Opcode::from_u16(operation) {
-            Opcode::OP_ST    =>  op_st(),
-            Opcode::OP_BR    =>  op_br(&mut register, instr),
-            Opcode::OP_LD    =>  op_ld(),
-            Opcode::OP_ADD   =>  op_add(&mut register, instr),
-            Opcode::OP_AND   =>  op_and(),
-            Opcode::OP_JMP   =>  op_jmp(&mut register, instr),
-            Opcode::OP_JSR   =>  op_jsr(),
-            Opcode::OP_LDI   =>  op_ldi(&mut register, instr, &memory),
-            Opcode::OP_LDR   =>  op_ldr(&mut register, instr, &memory),
-            Opcode::OP_LEA   =>  op_lea(&mut register, instr),
-            Opcode::OP_NOT   =>  op_not(&mut register, instr),
+            Opcode::OP_ST    =>  op_st(&reg, instr, &mut memory),
+            Opcode::OP_STI   =>  op_sti(&reg, instr, &mut memory),
+            Opcode::OP_STR   =>  op_str(&reg, instr, &mut memory),
+            Opcode::OP_BR    =>  op_br(&mut reg, instr),
+            Opcode::OP_LD    =>  op_ld(&mut reg, instr, &memory),
+            Opcode::OP_ADD   =>  op_add(&mut reg, instr),
+            Opcode::OP_AND   =>  op_and(&mut reg, instr),
+            Opcode::OP_JMP   =>  op_jmp(&mut reg, instr),
+            Opcode::OP_JSR   =>  op_jsr(&mut reg, instr),
+            Opcode::OP_LDI   =>  op_ldi(&mut reg, instr, &memory),
+            Opcode::OP_LDR   =>  op_ldr(&mut reg, instr, &memory),
+            Opcode::OP_LEA   =>  op_lea(&mut reg, instr),
+            Opcode::OP_NOT   =>  op_not(&mut reg, instr),
             Opcode::OP_RES   =>  op_res(),
             Opcode::OP_RTI   =>  op_rti(),
-            Opcode::OP_STI   =>  op_sti(),
-            Opcode::OP_STR   =>  op_str(),
             Opcode::OP_TRAP  =>  op_trap(),
         }
     }
