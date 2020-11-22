@@ -1,8 +1,8 @@
-use std::ops::{Index,IndexMut};
+use std::ops::{Index, IndexMut};
 
 #[derive(PartialEq, Eq, Hash, Copy, Clone)]
 #[allow(non_camel_case_types)]
-pub enum Reg{
+pub enum Reg {
     R_R0 = 0,
     R_R1 = 1,
     R_R2 = 2,
@@ -19,12 +19,9 @@ pub struct Register {
     pub reg: [u16; 10],
 }
 
-
 impl Default for Register {
     fn default() -> Register {
-        Register {
-            reg: [0; 10]
-        }
+        Register { reg: [0; 10] }
     }
 }
 
@@ -44,7 +41,7 @@ impl Index<Reg> for Register {
 /// override indexing with u16
 impl IndexMut<u16> for Register {
     fn index_mut(&mut self, index: u16) -> &mut Self::Output {
-       &mut self.reg[index as usize]
+        &mut self.reg[index as usize]
     }
 }
 impl Index<u16> for Register {
