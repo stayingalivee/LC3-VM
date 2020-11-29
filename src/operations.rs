@@ -360,7 +360,8 @@ fn trap_puts(reg: &Register, memory: &Memory){
 
 /**
  * PUTSP trap code used to output a null terminated string to stdout
- * the address of the string is fetched from R0
+ * the address of the string is fetched from R0. Characters are printed
+ * in a big endian format.
  */
 fn trap_putsp(reg: &Register, memory: &Memory){
     let mut i: u16 = reg[Reg::R_R0];
