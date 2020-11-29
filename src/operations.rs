@@ -364,15 +364,14 @@ fn trap_puts(reg: &Register, memory: &Memory){
  */
 fn trap_putsp(reg: &Register, memory: &Memory){
     let mut i: u16 = reg[Reg::R_R0];
-    let mut c: char = 'a';
-    while c!= '\0' {
+    while memory[i] as u8 as char != '\0' {
         let c1: char = (memory[i] & 0xFF) as u8 as char;
         print!("{}", c1);
         let c2: u8 = (memory[i] >> 8) as u8;
         if c2 != 0 {
             print!("{}", c2 as char);
         }
-
+        i += 1;
     }
 }
 
