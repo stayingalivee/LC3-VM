@@ -3,6 +3,7 @@ mod memory;
 mod opcode;
 mod operations;
 mod register;
+mod traps;
 use memory::Memory;
 use opcode::Opcode;
 use operations::*;
@@ -12,7 +13,6 @@ use register::Register;
 /**
  * Virutal machine implementing LC3 (Little Computer - 3)
  */
-
 fn main() {
     println!("Starting VM........");
 
@@ -33,10 +33,11 @@ fn main() {
      * 3- inspect the opcode to determine the operation then perform it
      * 4- goto 1
      */
-    let running: bool = true;
+    let mut running: bool = true;
     while running {
-        let instr: u16 = memory[reg[Reg::R_PC]];         // get the instruction
-        let operation: u16 = instr >> 12;                     // get the operation bits
+        let instr: u16 = memory[reg[Reg::R_PC]];
+        reg[Reg::R_PC] += 1;
+        let operation: u16 = instr >> 12;
 
         match Opcode::from_u16(operation) {
             Opcode::OP_ST    =>  op_st(&reg, instr, &mut memory),
@@ -54,7 +55,7 @@ fn main() {
             Opcode::OP_NOT   =>  op_not(&mut reg, instr),
             Opcode::OP_RES   =>  op_res(),
             Opcode::OP_RTI   =>  op_rti(),
-            Opcode::OP_TRAP  =>  op_trap(),
+            Opcode::OP_TRAP  =>  running = op_trap(&mut reg, instr, &memory),
         }
     }
 }

@@ -1,6 +1,8 @@
 use crate::cond_flags::Cond_flags;
 use crate::memory::Memory;
 use crate::register::*;
+use crate::traps::Traps;
+use std::io::Read;
 
 /**
  * Store
@@ -35,7 +37,7 @@ pub fn op_sti(reg: & Register, instr: u16, memory: &mut Memory) {
     let offset = sign_ext(instr & 0b111111111, 9);                 // get offset
     let sr = (instr >> 9) & 0b111;                                 // get source reg
     let address = memory[reg[Reg::R_PC].wrapping_add(offset)];
-    memory[address] = reg[sr];                                     // store indirectly       
+    memory[address] = reg[sr];                                     // store indirectly
 }
 
 /**
@@ -70,7 +72,7 @@ pub fn op_str(reg: & Register, instr: u16, memory: &mut Memory) {
  */
 pub fn op_br(reg: &mut Register, instr: u16) {
     let offset = sign_ext(instr & 0b111111111, 9);             // get offset to be incremented
-    let flags = (instr >> 9) & 0b111;                          // get the nzp flags
+    let flags = (instr >> 9) & 0b111;                          // get the nzp flag
 
     if flags & reg[Reg::R_COND] != 0 {                         // if bitwise add doesn't produce
         reg[Reg::R_PC] = reg[Reg::R_PC].wrapping_add(offset);  // an on bit then all flags are 0
@@ -103,9 +105,9 @@ pub fn op_ld(reg: &mut Register, instr: u16, memory: &Memory) {
  * 0001 dr SR1 1 imm5   --> immediate mode, do DR1 + imm5 after sign extending.
  */
 pub fn op_add(reg: &mut Register, instr: u16) {
-    let dr = (instr >> 9) & 0b111; // destination register
-    let sr1 = (instr >> 6) & 0b111; // first operand
-    let mode = (instr >> 5) & 0b1; // is it in an immediate mode ?
+    let dr = (instr >> 9) & 0b111;                  // destination register
+    let sr1 = (instr >> 6) & 0b111;                 // first operand
+    let mode = (instr >> 5) & 0b1;                  // is it in an immediate mode ?
 
     if mode == 1 {
         // if immediate mode then fetch the data from the instruction itself.
@@ -273,8 +275,110 @@ pub fn op_not(reg: &mut Register, instr: u16) {
 pub fn op_res() {/* not used */}
 pub fn op_rti() {/* not used */}
 
-pub fn op_trap() {}
 
+//==================================================//
+//====================== TRAPS =====================//
+//==================================================//
+/**
+ * trap routines
+ * 
+ * The implementation of the traps is provided in normal rust functions 
+ * instead of redirecting the instruction flow to a pre-determined address 
+ * on the memory(like normal machines do). 
+ */
+pub fn op_trap(reg: &mut Register, instr: u16, memory: &Memory) -> bool {
+    let mut running: bool = true;
+    match Traps::from_u16(instr & 0xFF){
+        Traps::TRAP_GETC  =>  trap_getc(reg),
+        Traps::TRAP_HALT  =>  trap_halt(&mut running),
+        Traps::TRAP_IN    =>  trap_in(reg),
+        Traps::TRAP_OUT   =>  trap_out(reg),
+        Traps::TRAP_PUTS  =>  trap_puts(reg, &memory),
+        Traps::TRAP_PUTSP =>  trap_putsp(reg, &memory),
+    }
+    return running;
+}
+
+/**
+ * GETC trap code used to get one chracter from the standard input
+ * the character is saved to R0.
+ */
+fn trap_getc(reg: &mut Register){
+    let input: u16 = std::io::stdin()
+        .bytes()
+        .next()
+        .and_then(|result| result.ok())
+        .map(|byte| byte as u16).unwrap();
+    reg[Reg::R_R0] = input;
+}
+
+/**
+ * HALT Trap code to halt the program.
+ */
+fn trap_halt(running: &mut bool){
+    println!("HALT PROGRAM");
+    *running = false;
+}
+
+/**
+ * IN trap code to get one character from stdin and output it to stdout
+ * after its saved to R0.
+ */
+fn trap_in(reg: &mut Register){
+    print!("Enter a character: ");
+    let input: char = std::io::stdin()
+        .bytes()
+        .next()
+        .and_then(|result| result.ok())
+        .map(|byte| byte as char).unwrap();
+
+    reg[Reg::R_R0] = input as u16;
+}
+
+/**
+ * OUT trap code used to output a character to standard output.
+ */
+fn trap_out(reg: &Register){
+   print!("{}", reg[Reg::R_R0]); 
+}
+
+/**
+ * PUTS trap code used to output a null terminated string.
+ * The string displayed has its address in R0. In LC3 a character
+ * is stored in a single momory location => each character is 16 bits
+ * and not one byte
+ */
+fn trap_puts(reg: &Register, memory: &Memory){
+    let mut i = reg[Reg::R_R0]; 
+    let mut c: char = 'a';
+    while c != '\0'{
+        c = (memory[i] as u8) as char;
+        print!("{}", c);
+        i += 1;
+    }
+}
+
+/**
+ * PUTSP trap code used to output a null terminated string to stdout
+ * the address of the string is fetched from R0
+ */
+fn trap_putsp(reg: &Register, memory: &Memory){
+    let mut i: u16 = reg[Reg::R_R0];
+    let mut c: char = 'a';
+    while c!= '\0' {
+        let c1: char = (memory[i] & 0xFF) as u8 as char;
+        print!("{}", c1);
+        let c2: u8 = (memory[i] >> 8) as u8;
+        if c2 != 0 {
+            print!("{}", c2 as char);
+        }
+
+    }
+}
+
+//==================================================//
+//===================== Helpers ====================//
+//==================================================//
 pub fn sign_ext(mut val: u16, bit_count: i16) -> u16 {
     if (val >> (bit_count - 1)) & 1 == 1 {
         val = val | 0xffff << bit_count;
@@ -292,9 +396,19 @@ fn update_flags(reg: &mut Register, dr: u16) {
     }
 }
 
+//==================================================//
+//====================== Tests =====================//
+//==================================================//
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_trap_puts(){
+        let mut register = Register::default();
+        let memory = Memory::new(100);
+        trap_puts(&mut register, &memory);
+    }
 
     #[test]
     fn test_op_and(){
