@@ -8,12 +8,12 @@ pub enum Opcode {
     OP_AND = 5,    // bitwise and
     OP_LDR = 6,    // load register
     OP_STR = 7,    // store register
-    OP_RTI = 8,    // unused
+   // OP_RTI = 8,    // unused
     OP_NOT = 9,    // bitwise not
     OP_LDI = 10,   // load indirect
     OP_STI = 11,   // store indirect
     OP_JMP = 12,   // jump
-    OP_RES = 13,   // reserved (unused)
+   // OP_RES = 13,   // reserved (unused)
     OP_LEA = 14,   // load effective address
     OP_TRAP = 15    // execute trap
 }
@@ -29,12 +29,12 @@ impl Opcode {
             5   => Self::OP_AND,
             6   => Self::OP_LDR,
             7   => Self::OP_STR,
-            8   => Self::OP_RTI,
+          //  8   => Self::OP_RTI,
             9   => Self::OP_NOT,
             10  => Self::OP_LDI,
             11  => Self::OP_STI,
             12  => Self::OP_JMP,
-            13  => Self::OP_RES,
+          //  13  => Self::OP_RES,
             14  => Self::OP_LEA,
             _   => Self::OP_TRAP
         }

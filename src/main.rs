@@ -1,14 +1,10 @@
-mod cond_flags;
-mod memory;
-mod opcode;
+mod defs;
 mod operations;
-mod register;
-mod traps;
-use memory::Memory;
-use opcode::Opcode;
-use operations::*;
-use register::Reg;
-use register::Register;
+
+use defs::memory::Memory;
+use defs::register::*;
+use operations::executor::*;
+
 
 /**
  * Virutal machine implementing LC3 (Little Computer - 3)
@@ -35,27 +31,8 @@ fn main() {
      */
     let mut running: bool = true;
     while running {
-        let instr: u16 = memory[reg[Reg::R_PC]];
-        reg[Reg::R_PC] += 1;
-        let operation: u16 = instr >> 12;
-
-        match Opcode::from_u16(operation) {
-            Opcode::OP_ST    =>  op_st(&reg, instr, &mut memory),
-            Opcode::OP_STI   =>  op_sti(&reg, instr, &mut memory),
-            Opcode::OP_STR   =>  op_str(&reg, instr, &mut memory),
-            Opcode::OP_BR    =>  op_br(&mut reg, instr),
-            Opcode::OP_LD    =>  op_ld(&mut reg, instr, &memory),
-            Opcode::OP_ADD   =>  op_add(&mut reg, instr),
-            Opcode::OP_AND   =>  op_and(&mut reg, instr),
-            Opcode::OP_JMP   =>  op_jmp(&mut reg, instr),
-            Opcode::OP_JSR   =>  op_jsr(&mut reg, instr),
-            Opcode::OP_LDI   =>  op_ldi(&mut reg, instr, &memory),
-            Opcode::OP_LDR   =>  op_ldr(&mut reg, instr, &memory),
-            Opcode::OP_LEA   =>  op_lea(&mut reg, instr),
-            Opcode::OP_NOT   =>  op_not(&mut reg, instr),
-            Opcode::OP_RES   =>  op_res(),
-            Opcode::OP_RTI   =>  op_rti(),
-            Opcode::OP_TRAP  =>  running = op_trap(&mut reg, instr, &memory),
-        }
+        let instr: u16 = memory[reg[Reg::R_PC]];                // fetch instruction
+        reg[Reg::R_PC] += 1;                                    // increment program counter
+        running = execute(instr, &mut reg, &mut memory);        // execute instruction
     }
 }
