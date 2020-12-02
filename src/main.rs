@@ -33,6 +33,6 @@ fn main() {
     while running {
         let instr: u16 = memory[reg[Reg::R_PC]];                // fetch instruction
         reg[Reg::R_PC] += 1;                                    // increment program counter
-        running = execute(instr, &mut reg, &mut memory);        // execute instruction
+        execute(instr, &mut reg, &mut memory, &mut running);        // execute instruction
     }
 }

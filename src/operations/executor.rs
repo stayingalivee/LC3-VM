@@ -2,8 +2,7 @@ use crate::defs::register::*;
 use crate::defs::memory::*;
 use crate::defs::opcode::*;
 
-pub fn execute(instr: u16, reg:&mut Register,memory: &mut Memory) -> bool {
-    let mut running: bool = true;
+pub fn execute(instr: u16, reg:&mut Register,memory: &mut Memory, running: &mut bool) {
     let operation: u16 = instr >> 12;
 
     match Opcode::from_u16(operation) {
@@ -22,7 +21,6 @@ pub fn execute(instr: u16, reg:&mut Register,memory: &mut Memory) -> bool {
         Opcode::OP_NOT   => super::not::op_not(reg, instr),
        // Opcode::OP_RES   => super::op_res(),
       //  Opcode::OP_RTI   => super:: op_rti(),
-        Opcode::OP_TRAP  =>  running = super::traps::op_trap(reg, instr, memory)
+        Opcode::OP_TRAP  =>  *running = super::traps::op_trap(reg, instr, memory),
     }
-    return running;
 }
