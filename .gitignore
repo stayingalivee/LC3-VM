@@ -1,4 +1,4 @@
 /target
-src/*.swp
-src/operations/*.swp
-src/defs/*.swp
+src/*.sw?
+src/operations/*.sw?
+src/defs/*.sw?
