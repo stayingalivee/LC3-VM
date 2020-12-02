@@ -105,13 +105,6 @@ mod tests {
     use super::*;
     
     #[test]
-    fn test_trap_getc(){
-        let mut reg: Register = Default::default();
-        trap_getc(&mut reg);
-        assert_eq!(reg[Reg::R_R0] as u8 as char, 'a');
-    }
-
-    #[test]
     fn test_trap_halt(){
         let mut running = true;
         trap_halt(&mut running);
