@@ -1,2 +1,4 @@
 /target
-src/.*
+src/*.swp
+src/operations/*.swp
+src/defs/*.swp
