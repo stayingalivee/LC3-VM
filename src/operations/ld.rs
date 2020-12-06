@@ -3,18 +3,18 @@ use crate::defs::register::*;
 use crate::operations::helper::*;
 
 
-/**
- * Load
- * 
- * Instruction example
- * 0010 DR  offset
- * 0010 001 000000011
- * 
- * An address is comuputed by sign_extending bits 8 to 0 to 16 bits and adding
- * this value to the incremented PC. The content of memory at this address is loaded
- * into DR. the condition codes are set based on whether the value loaded is 
- * negative, zero, or positive.
- */
+/// 
+/// Load
+/// 
+/// Instruction example
+/// 0010 DR  offset
+/// 0010 001 000000011
+/// 
+/// An address is comuputed by sign_extending bits 8 to 0 to 16 bits and adding
+/// this value to the incremented PC. The content of memory at this address is loaded
+/// into DR. the condition codes are set based on whether the value loaded is 
+/// negative, zero, or positive.
+
 pub fn op_ld(reg: &mut Register, instr: u16, memory: &Memory) {
     let offset = sign_ext(instr & 0b111111111, 9);               // sign extend and get offset
     let dr = (instr >> 9) & 0b111;                               // get destination register

@@ -20,7 +20,7 @@ pub fn execute(instr: u16, reg:&mut Register,memory: &mut Memory, running: &mut 
         Opcode::OP_LEA   => super::lea::op_lea(reg, instr),
         Opcode::OP_NOT   => super::not::op_not(reg, instr),
        // Opcode::OP_RES   => super::op_res(),
-      //  Opcode::OP_RTI   => super:: op_rti(),
+       //  Opcode::OP_RTI   => super:: op_rti(),
         Opcode::OP_TRAP  =>  *running = super::traps::op_trap(reg, instr, memory),
     }
 }

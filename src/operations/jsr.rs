@@ -3,21 +3,20 @@ use crate::defs::register::*;
 use crate::operations::helper::*;
 
 
-/**
- * Jump to subroutine
- * 
- * Instruction example
- * 0100 1 offset
- * 0100 0 00 SR 000000 
- * 
- * First, the incremented PC is saved to R7. This is the linkage back to the calling
- * routine. Then the PC is loaded with the address of the first instruction of the 
- * subroutine, causing an unconditional jump to that address. The address of the
- * subroutine is obtained from the base register(if bit 11 is 0), or the address is 
- * computed by sign-extending bits 10 to 0 abd adding this value to the incremented
- * PC(if bit 11 is 1)
- * 
- */
+/// 
+/// Jump to subroutine
+/// 
+/// Instruction example
+/// 0100 1 offset
+/// 0100 0 00 SR 000000 
+/// 
+/// First, the incremented PC is saved to R7. This is the linkage back to the calling
+/// routine. Then the PC is loaded with the address of the first instruction of the 
+/// subroutine, causing an unconditional jump to that address. The address of the
+/// subroutine is obtained from the base register(if bit 11 is 0), or the address is 
+/// computed by sign-extending bits 10 to 0 abd adding this value to the incremented
+/// PC(if bit 11 is 1)
+/// 
 pub fn op_jsr(reg: &mut Register, instr: u16) {
     reg[Reg::R_R7] = reg[Reg::R_PC];                           // save PC value in R7
     if (instr >> 11) & 0b1 == 0 {                              // if jmp mode is immediate

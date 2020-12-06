@@ -3,20 +3,19 @@ use crate::defs::register::*;
 use crate::operations::helper::*;
 
 
-/**
- * Load immedate offset, loads a value from an address in memory
- * into a register, Opcode is 0110
- *
- * Instruction example
- * 0110 dr  base offset
- * 0110 001 011  000001
- *
- * n address is computed by sign-extending bits [5:0] to 16 bits and
- * adding thisvalue to the contents of the register specified by bits [8:6]
- * The contents of memoryat this address are loaded into DR.
- * The condition codes are set, based on whetherthe value loaded is
- * negative, zero, or positive
- */
+///
+/// Load immedate offset, loads a value from an address in memory
+/// into a register, Opcode is 0110
+///
+/// Instruction example
+/// 0110 dr  base offset
+/// 0110 001 011  000001
+///
+/// n address is computed by sign-extending bits [5:0] to 16 bits and
+/// adding thisvalue to the contents of the register specified by bits [8:6]
+/// The contents of memoryat this address are loaded into DR.
+/// The condition codes are set, based on whetherthe value loaded is
+/// negative, zero, or positive
 pub fn op_ldr(reg: &mut Register, instr: u16, memory: &Memory) {
     let dr = (instr >> 9) & 0b111; // get destination register
     let base_r = (instr >> 6) & 0b111; // get base_r from instr

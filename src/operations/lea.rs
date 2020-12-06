@@ -3,19 +3,17 @@ use crate::defs::register::*;
 use crate::operations::helper::*;
 
 
-/**
- * Load Effective Address
- *
- * Instruction example
- * 1110  dr  offset
- * 1110  001 000000011
- *
- * An address is computed by sign-extending bits [8:0] to 16 bits and adding this
- * value to the incremented PC. This address is loaded into DR. The condition
- * codes are set, based on whether the value loaded is negative, zero, or positive.
- *
- * LEA R0, Target
- */
+/// Load Effective Address
+///
+/// Instruction example
+/// 1110  dr  offset
+/// 1110  001 000000011
+///
+/// An address is computed by sign-extending bits [8:0] to 16 bits and adding this
+/// value to the incremented PC. This address is loaded into DR. The condition
+/// codes are set, based on whether the value loaded is negative, zero, or positive.
+///
+/// LEA R0, Target
 pub fn op_lea(reg: &mut Register, instr: u16) {
     let dr = (instr >> 9) & 0b111; // get destination register
     let offset = sign_ext(instr & 0b111111111, 9); // sign extend and get offset

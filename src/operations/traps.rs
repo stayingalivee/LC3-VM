@@ -3,13 +3,11 @@ use crate::defs::register::*;
 use crate::defs::memory::*;
 use std::io::Read;
 
-/**
- * trap routines
- * 
- * The implementation of the traps is provided in normal rust functions 
- * instead of redirecting the instruction flow to a pre-determined address 
- * on the memory(like normal machines do). 
- */
+/// trap routines
+/// 
+/// The implementation of the traps is provided in normal rust functions 
+/// instead of redirecting the instruction flow to a pre-determined address 
+/// on the memory(like normal machines do). 
 pub fn op_trap(reg: &mut Register, instr: u16, memory: &Memory) -> bool {
     let mut running: bool = true;
     match Traps::from_u16(instr & 0xFF){
@@ -23,10 +21,8 @@ pub fn op_trap(reg: &mut Register, instr: u16, memory: &Memory) -> bool {
     return running;
 }
 
-/**
- * GETC trap code used to get one chracter from the standard input
- * the character is saved to R0.
- */
+/// GETC trap code used to get one chracter from the standard input
+/// the character is saved to R0.
 fn trap_getc(reg: &mut Register){
     let input: u16 = std::io::stdin()
         .bytes()
@@ -36,18 +32,14 @@ fn trap_getc(reg: &mut Register){
     reg[Reg::R_R0] = input;
 }
 
-/**
- * HALT Trap code to halt the program.
- */
+/// HALT Trap code to halt the program.
 fn trap_halt(running: &mut bool){
     println!("HALT PROGRAM");
     *running = false;
 }
 
-/**
- * IN trap code to get one character from stdin and output it to stdout
- * after its saved to R0.
- */
+/// IN trap code to get one character from stdin and output it to stdout
+/// after its saved to R0.
 fn trap_in(reg: &mut Register){
     print!("Enter a character: ");
     let input: char = std::io::stdin()
@@ -59,19 +51,15 @@ fn trap_in(reg: &mut Register){
     reg[Reg::R_R0] = input as u16;
 }
 
-/**
- * OUT trap code used to output a character to standard output.
- */
+/// OUT trap code used to output a character to standard output.
 fn trap_out(reg: &Register){
    print!("{}", reg[Reg::R_R0]); 
 }
 
-/**
- * PUTS trap code used to output a null terminated string.
- * The string displayed has its address in R0. In LC3 a character
- * is stored in a single momory location => each character is 16 bits
- * and not one byte
- */
+/// PUTS trap code used to output a null terminated string.
+/// The string displayed has its address in R0. In LC3 a character
+/// is stored in a single momory location => each character is 16 bits
+/// and not one byte
 fn trap_puts(reg: &Register, memory: &Memory){
     let mut i = reg[Reg::R_R0]; 
     let mut c: char = 'a';
@@ -82,11 +70,9 @@ fn trap_puts(reg: &Register, memory: &Memory){
     }
 }
 
-/**
- * PUTSP trap code used to output a null terminated string to stdout
- * the address of the string is fetched from R0. Characters are printed
- * in a big endian format.
- */
+/// PUTSP trap code used to output a null terminated string to stdout
+/// the address of the string is fetched from R0. Characters are printed
+/// in a big endian format.
 fn trap_putsp(reg: &Register, memory: &Memory){
     let mut i: u16 = reg[Reg::R_R0];
     while memory[i] as u8 as char != '\0' {

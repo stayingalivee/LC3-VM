@@ -3,17 +3,15 @@ use crate::defs::register::*;
 use crate::operations::helper::*;
 
 
-/**
- * Store
- * 
- * Instruction Example
- * 0011 SR  offset
- * 0011 001 000000011
- * 
- * The contents of the register specified by SR are stored in the memory location
- * whose address is computer by sign extending bits 8-0 to 16 bits and adding this
- * vlaue to the incremented PC.
- */
+/// Store
+/// 
+/// Instruction Example
+/// 0011 SR  offset
+/// 0011 001 000000011
+/// 
+/// The contents of the register specified by SR are stored in the memory location
+/// whose address is computer by sign extending bits 8-0 to 16 bits and adding this
+/// vlaue to the incremented PC.
 pub fn op_st(reg: & Register, instr: u16, memory: &mut Memory) {
     let offset = sign_ext(instr & 0b111111111, 9);                // get offset
     let sr = (instr >> 9) & 0b111;                                // get source reg

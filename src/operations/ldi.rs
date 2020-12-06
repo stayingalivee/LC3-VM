@@ -3,19 +3,18 @@ use crate::defs::register::*;
 use crate::operations::helper::*;
 
 
-/**
- * Load Indirect operation, loads a value from an address
- * in memory into a register. Opcode is 1010
- *
- * Instruction example
- * 1010 dr PC_offset9
- * 1010 001 100010011
- *
- * An address is computed by sign-extending bits [8:0] to 16 bits and adding
- * this value to the incremented PC. What is stored in memory at this address
- * is theaddress of the data to be loaded into DR. The condition codes are set,
- * based onwhether the value loaded is negative, zero, or positive.
- */
+/// 
+/// Load Indirect operation, loads a value from an address
+/// in memory into a register. Opcode is 1010
+///
+/// Instruction example
+/// 1010 dr PC_offset9
+/// 1010 001 100010011
+///
+///  An address is computed by sign-extending bits [8:0] to 16 bits and adding
+/// this value to the incremented PC. What is stored in memory at this address
+/// is theaddress of the data to be loaded into DR. The condition codes are set,
+/// based onwhether the value loaded is negative, zero, or positive.
 pub fn op_ldi(reg: &mut Register, instr: u16, memory: &Memory) {
     let dr = (instr >> 9) & 0b111; // get destination register
     let offset = sign_ext(instr & 0b111111111, 9); // sign extend pc offset

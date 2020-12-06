@@ -3,13 +3,13 @@ use crate::defs::register::*;
 use crate::operations::helper::*;
 
 
-/**
- * Add operation
- * 
- * instruction example
- * 0001 dr SR1 0 00 SR2 --> get the second value from SR2 register.
- * 0001 dr SR1 1 imm5   --> immediate mode, do DR1 + imm5 after sign extending.
- */
+///
+/// Add operation
+/// 
+/// instruction example
+/// 0001 dr SR1 0 00 SR2 --> get the second value from SR2 register.
+/// 0001 dr SR1 1 imm5   --> immediate mode, do DR1 + imm5 after sign extending.
+///
 pub fn op_add(reg: &mut Register, instr: u16) {
     let dr = (instr >> 9) & 0b111;                  // destination register
     let sr1 = (instr >> 6) & 0b111;                 // first operand

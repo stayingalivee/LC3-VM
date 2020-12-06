@@ -3,17 +3,15 @@ use crate::defs::memory::*;
 use crate::operations::helper::*;
 
 
-/**
- * Store base + offset
- * 
- * Instruction example
- * 0111 sr  base 000001
- * 0111 001 002  000001
- * 
- * The contents of the register specified by SR are stored in the memory location
- * whose address is computed by sign-extending bits [5:0] to 16 bits and adding this
- * value to the contents of the register specified by bits [8:6]
- */
+/// Store base + offset
+/// 
+/// Instruction example
+/// 0111 sr  base 000001
+/// 0111 001 002  000001
+/// 
+/// The contents of the register specified by SR are stored in the memory location
+/// whose address is computed by sign-extending bits [5:0] to 16 bits and adding this
+/// value to the contents of the register specified by bits [8:6]
 pub fn op_str(reg: & Register, instr: u16, memory: &mut Memory) {
     let offset = sign_ext(instr & 0b111111, 6);
     let base = (instr >> 6) & 0b111;

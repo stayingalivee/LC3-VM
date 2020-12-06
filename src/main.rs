@@ -6,9 +6,9 @@ use defs::register::*;
 use operations::executor::*;
 
 
-/**
- * Virutal machine implementing LC3 (Little Computer - 3)
- */
+///
+/// V irutal machine implementing LC3 (Little Computer - 3)
+///
 fn main() {
     println!("Starting VM........");
 
@@ -22,13 +22,11 @@ fn main() {
     let mut reg: Register = Default::default();
     reg[Reg::R_PC] = pc_start;
 
-    /*
-     * From now on the process is fairly simple
-     * 1- load the instruction from the RAM (PC)
-     * 2- increment PC
-     * 3- inspect the opcode to determine the operation then perform it
-     * 4- goto 1
-     */
+    // From now on the process is fairly simple
+    // 1- load the instruction from the RAM (PC)
+    // 2- increment PC
+    // 3- inspect the opcode to determine the operation then perform it
+    // 4- goto 1
     let mut running: bool = true;
     while running {
         let instr: u16 = memory[reg[Reg::R_PC]];                // fetch instruction

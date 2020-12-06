@@ -1,12 +1,9 @@
 use std::ops::{Index, IndexMut};
 
 
-/**
- * Random Access Memory RAM struct.
- * implements Index and IndexMut trait to facilitate indexing with u16
- * and Reg enum (to use PC)
- * 
- */
+/// Random Access Memory RAM struct.
+/// implements Index and IndexMut trait to facilitate indexing with u16
+/// and Reg enum (to use PC)
 pub struct Memory {
     pub size: usize,
     pub memory: Vec<u16>,

@@ -3,20 +3,19 @@ use crate::defs::register::*;
 use crate::operations::helper::*;
 
 
-/**
- * Jump
- *
- * Instruction example
- * 1100 000 sr  000000
- * 1100 000 001 000000
- *
- * The program unconditionally jumps to the location specified by the contents of
- * the base register. Bits [8:6] identify the base register.
- *
- * The RET instruction is a special case of the JMP instruction.
- * The PC is loaded with the contents of R7, which contains the linkage
- * back to the instructionfollowing the subroutine call instruction.
- */
+///
+/// Jump
+///
+/// Instruction example
+/// 1100 000 sr  000000
+/// 1100 000 001 000000
+///
+/// The program unconditionally jumps to the location specified by the contents of
+/// the base register. Bits [8:6] identify the base register.
+///
+/// The RET instruction is a special case of the JMP instruction.
+/// The PC is loaded with the contents of R7, which contains the linkage
+/// back to the instructionfollowing the subroutine call instruction.
 pub fn op_jmp(reg: &mut Register, instr: u16) {
     let sr = (instr >> 6) & 0b111;
     reg[Reg::R_PC] = reg[sr];

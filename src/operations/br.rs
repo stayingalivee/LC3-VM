@@ -3,18 +3,16 @@ use crate::defs::register::*;
 use crate::operations::helper::*;
 
 
-/**
- * Conditional Branch.
- *
- * Instruction example
- * 0000 n z p   offset
- * 0000 1 1 1 000000011
- *
- * The condition codes specified by the state of bits [11:9] are tested. If bit [11] is set,
- * N is tested; if bit [11] is clear, N is not tested. If bit [10] is set, Z is tested, etc.
- * If any of the condition codes tested is set, the program branches to the location
- * specified by adding the sign-extended PCoffset9 field to the incremented PC.
- */
+/// Conditional Branch.
+///
+/// Instruction example
+/// 0000 n z p   offset
+/// 0000 1 1 1 000000011
+///
+/// The condition codes specified by the state of bits [11:9] are tested. If bit [11] is set,
+/// N is tested; if bit [11] is clear, N is not tested. If bit [10] is set, Z is tested, etc.
+/// If any of the condition codes tested is set, the program branches to the location
+/// specified by adding the sign-extended PCoffset9 field to the incremented PC.
 pub fn op_br(reg: &mut Register, instr: u16) {
     let offset = sign_ext(instr & 0b111111111, 9);             // get offset to be incremented
     let flags = (instr >> 9) & 0b111;                          // get the nzp flag
