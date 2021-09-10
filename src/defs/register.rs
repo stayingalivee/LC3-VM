@@ -31,6 +31,7 @@ impl IndexMut<Reg> for Register {
         &mut self.reg[index as usize]
     }
 }
+
 impl Index<Reg> for Register {
     type Output = u16;
     fn index(&self, index: Reg) -> &Self::Output {
@@ -44,6 +45,7 @@ impl IndexMut<u16> for Register {
         &mut self.reg[index as usize]
     }
 }
+
 impl Index<u16> for Register {
     type Output = u16;
     fn index(&self, index: u16) -> &Self::Output {
